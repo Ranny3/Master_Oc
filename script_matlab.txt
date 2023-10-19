@@ -1,0 +1,530 @@
+Primeiro coloca o dado no formato csv
+abre o matlab e procura a pasta em que o arquivo está
+# Prestar atenção se as colunas estão com a descriçã de categorial e não numerical, pois essa não pode ter letra
+Mas a função plot não ler categorial#
+seleciona as 3 colunas que serão usadas somente com os números
+Clique em Import Selection
+ Use o script
+plot funciona em arrays não em table 
+----------------------------------------------------------------------------------------------------------
+2 - 2 ou mais perfis
+% carrega os arquivos
+data1 = readtable('nomedoarquivo.csv');
+data2 = readtable('nomedoarquivo.csv');
+
+% Extrai as variaveis%
+x1 = data1.x;
+z1 = data1.z;
+x2 = data2.x;
+z2 = data2.z;
+
+#Mudar o x e z de acordo com o nome dado para os seus datasets criados#
+-----------------------------------------------------------------------------------------------------------
+#Caso a tabela utilizada não tenha na primeira linha identificando qual coluna é cada variável#
+%Carrega o arquivo com os dados
+
+subseteta79 = ETA79S;
+% Mude o número após o : para a coluna que quer extrair
+x13 = line1.xyzdata.data206(:, 1);
+z13 = line1.xyzdata.data206(:, 3);
+
+% Caso não queira extrair a coluna inteira, defina as linhas
+startRow = 17;
+endRow = 107;
+
+% Extrai as linhas designadas da tabela
+subseteta79 = ETA79S(startRow:endRow, :);
+
+% Mude o número após o : para a coluna que quer extrair
+
+---------------------------------------------------------------------------------------------------
+% Se tiver 3 perfis juntos x1, x2, x3, z1, z2, z3
+
+% Plota a 1° set of data
+plot(x1, z1, '-o', 'LineWidth', 2);
+hold on;
+
+% Plota a 2° set of data
+plot(x2, z2, '-x', 'LineWidth', 2);
+
+%Adicionar mais de acordo com a quant.)
+
+% Add axis labels
+xlabel('Distância (m)');
+ylabel('Profundidade (m)');
+
+% Add a legend
+legend('11/1981', '12/1981');
+% Add a title
+title('Transecto -91');
+
+% Adjust the position of the title (optional)
+titlePos = get(gca, 'Title');
+titlePos.Position(2) = titlePos.Position(2) + 0.05;
+set(gca, 'Title', titlePos);
+
+
+#Mudar de acordo com os dados#
+----------------------------------------------------------------------------------------------###
+% Assuming you have UTM coordinates in variables easting and northing
+easting = 500000;  % Replace with your UTM easting value
+northing = 4500000;  % Replace with your UTM northing value
+zone = 31;  % Replace with your UTM zone number
+
+% Convert UTM coordinates to latitude and longitude
+[latitude, longitude] = utm2ll(easting, northing, zone);
+
+% Display the latitude and longitude
+disp(['Latitude: ', num2str(latitude)]);
+disp(['Longitude: ', num2str(longitude)]);
+-------------------------------------------------------------------------------------------
+% Specify the path to the NetCDF file
+filename2 = 'B:\Cassie-core_Larissa_2023\03_temp\Transects_survey_19740506.nc';
+
+% Read the contents of the NetCDF file
+data = ncread(filename);
+
+% View the variable names and dimensions in the file
+disp(data);
+
+---------------------------- OR -------------------------------------
+% Open the NetCDF file and retrieve the variable information
+info = ncinfo(filename2);
+
+% Read the contents of the NetCDF file
+data2 = ncread(filename2, info.Variables(1).Name);
+
+% View the variable data
+disp(data);
+------------------------------------------------------------------------------------------
+% Plotar mais de 2 perfis ao mesmo tempo
+% Plot só funciona com array e não table
+% Convert table variables to arrays
+x1 = table2array(x1);
+z1 = table2array(z1);
+x2 = table2array(x2);
+z2 = table2array(z2);
+x3 = table2array(x3);
+z3 = table2array(z3);
+x4 = table2array(x4);
+z4 = table2array(z4);
+x5 = table2array(x5);
+z5 = table2array(z5);
+
+% Plot the profiles
+plot(x1, z1, '-o', 'LineWidth', 2);  % First profile
+hold on;
+plot(x2, z2, '-x', 'LineWidth', 2);  % Second profile
+plot(x3, z3, '-s', 'LineWidth', 2);  % Third profile
+plot(x4, z4, '-^', 'LineWidth', 2);  % Fourth profile
+plot(x5, z5, '-d', 'LineWidth', 2);  % Fifth profile
+
+% Add axis labels and legend
+xlabel('x');
+ylabel('z');
+legend('Profile 1', 'Profile 2', 'Profile 3', 'Profile 4', 'Profile 5');
+
+% Add a title
+title('ETA79');
+----------------------------------------------------------------------------------------------------
+% Mudança do volume colocada como espectro de onda no eixo y, volume horizontal
+volume_change = z2 - z1;
+
+% Calculate x-axis distances
+distance = x1;
+
+% Plotting
+figure;
+hold on;
+
+% Plot the filled area below the volume change line
+fill([distance; flip(distance)], [zeros(size(volume_change)); flip(volume_change)], 'b', 'EdgeColor', 'none', 'FaceAlpha', 0.3);
+
+% Plot the volume change line
+plot(distance, volume_change, 'b.-', 'LineWidth', 1.5);
+
+% Plot the central zero line
+plot([min(distance), max(distance)], [0, 0], 'k--', 'LineWidth', 1.5);
+
+hold off;
+
+% Set labels and title
+xlabel('Distância (m)');
+ylabel('Mudança de Volume (m³)');
+title('Volume Change -91');
+
+% Add legend
+legend('Volume Change', 'Zero Line');
+
+% Adjust y-axis limits
+ylim([min(volume_change) - 1, max(volume_change) + 1]);
+
+------------------------------------------------------------------------------------
+%Volume Vertical em pontos
+% Calculate change in volume
+volume_change = z2 - z1;
+
+% Depth values
+depth = 1:numel(z2); % Assuming equal depth intervals between data points
+
+% Plotting the comparison
+figure;
+hold on;
+
+% Zero central line
+plot([0, 0], [min(depth), max(depth)], 'k--');
+
+% Change in volume
+plot(volume_change, depth, 'bo-');
+
+% Set labels and title
+xlabel('Change in Volume');
+ylabel('Depth');
+title('Comparison of Beach Profile Data');
+
+% Set axis limits
+xlim([min(volume_change) - 1, max(volume_change) + 1]);
+ylim([min(depth), max(depth)]);
+
+% Show grid
+grid on;
+
+% Show legend
+legend('Zero Central Line', 'Change in Volume');  
+
+% Hold off from further plotting
+hold off;
+-------------------------------------------------------------------------------------------
+%Volume Vertical em barrras
+% Calculate change in volume
+volume_change = z2 - z1;
+
+% Depth values
+depth = 1:numel(z2); % Assuming equal depth intervals between data points
+
+% Plotting the comparison
+figure;
+hold on;
+
+% Zero central line
+plot([0, 0], [min(depth), max(depth)], 'k--');
+
+% Change in volume represented as bars
+barh(depth, volume_change, 'b');
+
+% Set labels and title
+xlabel('Mudança de Volume (m³)');
+ylabel('Profundidade (m)');
+title('Mudança de Volume -91');
+
+% Set axis limits
+xlim([min(volume_change) - 1, max(volume_change) + 1]);
+ylim([min(depth), max(depth)]);
+
+
+%% Adicionar a função Invert y-axis se quiser que o eixo y estiver ao contrário
+set(gca, 'YDir', 'reverse');
+
+% Show grid
+grid on;
+
+% Hold off from further plotting
+hold off;
+--------------------------------------------------------------------------------------------
+%Plotar os três gráficos juntos
+
+% Definir as variáveis distance, volume_change e depth 
+distance = x*;
+volume_change = z* - z*;
+depth = 1:numel(z*);
+
+% Plot 1° subplot
+subplot(1, 3, 1);
+hold on;
+
+% Linha central zero
+plot([0, 0], [min(depth), max(depth)], 'k--');
+
+% Mudança de volume representada em barras
+barh(depth, volume_change, 'b');
+
+% Set limites e legendas
+xlabel('Mudança de Volume (m³)');
+ylabel('Profundidade (m)');
+
+xlim([min(volume_change) - 1, max(volume_change) + 1]);
+ylim([min(depth), max(depth)]);
+
+
+% Adicionar a função Invert y-axis caso o eixo y estiver ao contrário do desejado
+%set(gca, 'YDir', 'reverse');
+
+% Show grid
+grid on;
+
+% Hold off para os subplots seguintes
+hold off;
+
+sgtitle('Transecto ***', 'FontSize', 16);
+subplot(1, 3, 2);
+hold on;
+
+% Plot a área abaixo da linha de volume preenchidas
+fill([distance; flip(distance)], [zeros(size(volume_change)); flip(volume_change)], 'b', 'EdgeColor', 'none', 'FaceAlpha', 0.3);
+
+% Plot a linha de mudança volume
+plot(distance, volume_change, 'b.-', 'LineWidth', 1.5);
+
+% Plot a linha central zero 
+plot([min(distance), max(distance)], [0, 0], 'k--', 'LineWidth', 1.5);
+
+hold off;
+
+% Set títulos
+xlabel('Distância (m)');
+ylabel('Mudança de Volume (m³)');
+
+
+% Ajuste do limite do eixo y
+ylim([min(volume_change) - 1, max(volume_change) + 1]);
+
+subplot(1, 3, 3);
+hold on;
+% Plota a 1° set of data
+plot(x1, z1, '-o', 'LineWidth', 2);
+hold on;
+
+% Plota a 2° set of data
+plot(x2, z2, '-x', 'LineWidth', 2);
+
+
+% Adicione legenda
+legend('***', '***');
+
+% Ajuste da posição dos títulos (opicional)
+titlePos = get(gca, 'Title');
+titlePos.Position(2) = titlePos.Position(2) + 0.05;
+set(gca, 'Title', titlePos);
+
+---------------------------------------------------------------------------#####
+x = rand(500, 1) * 1000;
+z = rand(500, 1) * 20 - 10;
+
+figure;
+hold on;
+for i = 1:500
+    plot(x(i, :), z(i, :));
+end
+hold off;
+
+title('Beach Profiles');
+xlabel('X');
+ylabel('Z');
+grid on;
+axis([0 1000 -10 10]);
+x = rand(500, 1) * 1000;
+z = rand(500, 1) * 20 - 10;
+
+figure;
+hold on;
+for i = 1:500
+    plot(x(i, :), z(i, :));
+end
+hold off;
+
+title('Beach Profiles');
+xlabel('X');
+ylabel('Z');
+grid on;
+axis([0 1000 -10 10]);
+-----------------------------------------------------------------------
+% Prisma Praial
+
+% Create a cell array to store x and z datasets
+xData = {x1, x2, x3,x4, x5, x6, x7, x8, x9, x10...xn}
+zData = {z1, z2, z3, z4, z5, z6, z7, z8, z9, z10...zn}
+figure;
+hold on;
+
+% Iterate over each dataset and plot the beach profiles
+for i = 1:numel(xData)
+    plot(xData{i}, zData{i});
+end
+
+hold off;
+
+title('Transecto 2102');
+xlabel('Distância (m)');
+ylabel('Profundidade (m)');
+grid on;
+% Adjust the axes limits according to your data
+axis([min max min max]);
+----------------------------------------------------------------------------------####
+%FRF Coordenadas para metros
+p1 e p2 são as distâncias que eu tenho
+
+---------------------------------------------------------------------------------------
+% Retirar os datasets vazios
+
+% Initialize a new structure
+newLine43.xyzdata = struct();
+
+% Get the fieldnames 
+fieldNames = fieldnames(line43.xyzdata);
+
+% Iterate through the fieldnames
+for i = 1:numel(fieldNames)
+    fieldName = fieldNames{i};
+    dataset = line43.xyzdata.(fieldName);
+    
+    % Check if the dataset is empty and add it to the new structure if it's not empty
+    if ~isempty(dataset)
+        newLine43.xyzdata.(fieldName) = dataset;
+    end
+end
+
+-----------------------------------------------------------------------------------
+% Extrair o x
+
+% Get the fieldnames 
+fieldNames = fieldnames(newLine43.xyzdata);
+
+% Initialize a cell array to store the extracted columns
+extractedColumns = cell(1, numel(fieldNames));
+
+% Iterate through the fieldnames and extract the first column of each dataset
+for i = 1:numel(fieldNames)
+    fieldName = fieldNames{i};
+    dataset = newLine43.xyzdata.(fieldName);
+    
+    % Extract the first column of the dataset and store it in the cell array
+    extractedColumns{i} = dataset(:, 1);
+end
+
+% Assign variables using a loop
+for i = 1:numel(extractedColumns)
+    variableName = sprintf('x%d', i);
+    eval([variableName, ' = extractedColumns{', num2str(i), '};']);
+end
+
+-----------------------------------------
+% Extrair o z
+
+fieldNames = fieldnames(newLine42.xyzdata);
+
+% Initialize a cell array to store the extracted columns
+extractedColumns = cell(1, numel(fieldNames));
+
+% Iterate through the fieldnames and extract the third column of each dataset
+for i = 1:numel(fieldNames)
+    fieldName = fieldNames{i};
+    dataset = newLine42.xyzdata.(fieldName);
+    
+    % Extract the third column of the dataset and store it in the cell array
+    extractedColumns{i} = dataset(:, 3);
+end
+
+% Assign variables using a loop
+for i = 1:numel(extractedColumns)
+    variableName = sprintf('z%d', i);
+    eval([variableName, ' = extractedColumns{', num2str(i), '};']);
+end
+
+
+-----------------------------------------------------------------------------------
+% Interpolação de dados
+
+% z_data is a cell array containing the z depth data for each profile
+% x_data is a cell array containing the x distance data for each profile
+
+% Find the maximum number of points among all profiles
+max_points = 0;
+for i = 1:numel(zData)
+    num_points = numel(zData{i});
+    if num_points > max_points
+        max_points = num_points;
+    end
+end
+
+% Interpolate the profiles to have the same number of points
+interpolated_profiles = cell(numel(zData), 1);
+for i = 1:numel(zData)
+    x = xData{i};
+    z = zData{i};
+    
+    % Sort and remove duplicate x values
+    [unique_x, unique_indices] = unique(x);
+    sorted_indices = sort(unique_indices);
+    unique_z = z(unique_indices);
+    
+    % Create a new set of x values with the desired number of points
+    new_x = linspace(min(unique_x), max(unique_x), max_points)';
+    
+    % Interpolate the z values using the new set of x values
+    new_z = interp1(unique_x(sorted_indices), unique_z(sorted_indices), new_x, 'linear');
+    
+    % Store the interpolated profile
+    interpolated_profiles{i} = [new_x, new_z];
+end
+
+------------------------------------------------------------------------------
+% Maximum e minímo
+
+
+
+----------------------------------
+% Médio 
+----------------------
+
+mmap global Coastal Line
+
+gshhs not found. Showing help for m_gshhs instead. ---
+
+  m_gshhs Add a coastline to a given map using 
+            the Global Self-consistant Hierarchical High-resolution 
+            Shorelines, Rivers, and Borders
+ 
+          m_gshhs(RES, (standard line option,...,...) ) draws the coastline
+          river network, or borders as  simple lines.
+ 
+          m_gshhs(RES,'patch' ( ,standard patch options,...,...) ) draws the 
+          coastline as a number of patches (rivers and borders are not
+          arranged so patches can be drawn).
+ 
+          m_gshhs(RES,'save',FILENAME) saves the extracted coastline data
+          for the current projection in a file FILENAME. This allows 
+          speedier replotting using M_USERCOAST(FILENAME). 
+     
+          RES: A one-char string (optionally 2 or 3)
+          
+          First char: resolution - one of
+                       'c'  crude
+                       'l'  low
+                       'i'  intermediate
+                       'h'  high
+                       'f'  full
+ 
+          Second char: type - one of
+                       'c' GSHHS coastline (default)
+                       'b' WDB Border
+                       'r' WDB River
+   
+          Third char - if 2nd char is 'b':
+                       '1' Country borders
+                       '2' State/Province and Country borders
+                     - if 2nd char is 'r': '1','2','3','4' 
+                       add successively more tributaries
+ 
+          (also maintained is this optional format:
+ 
+          RES - selections resolution
+                   1  or 'crude'	
+                   2  or 'low'  	
+                   3  or 'intermediate'  
+                   4  or 'high' 	
+                   5  or 'full  	
+ 
+          but please don't use this).
+ 
+          See also m_proj, m_grid, m_coast, m_gshhs_l, m_gshhs_h, m_gshhs_c 
+          m_usercoast
