@@ -1,0 +1,7 @@
+% Specify the file path
+file_path = 'path/to/your/beach_profile_data.csv'; % Replace with the actual file path
+
+% Load the CSV file into a matrix
+data = readmatrix(file_path);
+
+% Now you can use the 'data' matrix for plotting or any other analysis
