@@ -1,0 +1,9 @@
+%% Após remoção de todos os x e z, ocorre a perda do vínculo com a data, então tem que saber como retirar sm perder a data associada ao dado%%%
+Ou retira até os zero com Nans só pra saber que tem ou já renomeia com a data???
+
+%%% A interpolação tem que ser feita antes, e aumenta a quantidade de dados para o maior, só que cria essas variavéis dentro de células, tem q retirar das células 
+para depois poder fazer o cálculo do volume ou aprender a puxar sem tirar das celulas
+
+%%%No plot dos 3 gráficos o Vertical vem com a profundidade errada, lembrar de trocar o n° dos perfis no 3° plot e trocar o nome e data dos transectos,verificar o depth - 
+%%% Tabela com os valores dos volumes por perfil mudado
+
