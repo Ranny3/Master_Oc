@@ -528,3 +528,37 @@ gshhs not found. Showing help for m_gshhs instead. ---
  
           See also m_proj, m_grid, m_coast, m_gshhs_l, m_gshhs_h, m_gshhs_c 
           m_usercoast
+--------------------------------------------------------------------------------------------
+Surperfície
+% Dados de exemplo (substitua esses valores pelos seus dados reais)
+x = linspace(1, 35, 10); % Exemplo: coordenadas x
+z = linspace(1, 35, 10); % Exemplo: coordenadas z
+values = rand(10, 10); % Exemplo: valores associados às coordenadas (substitua pelos seus próprios dados)
+
+% Definir a grade para a interpolação
+[X, Z] = meshgrid(linspace(1, 35, 100), linspace(1, 35, 100));
+
+% Interpolar os valores usando griddata
+interpolated_values = griddata(x, z, values, X, Z, 'cubic');
+
+% Transpor os dados interpolados para que o eixo vertical seja Y
+interpolated_values = interpolated_values';
+
+% Plotar a superfície interpolada
+figure;
+surf(X, Z, interpolated_values);
+
+% Adicionar rótulos aos eixos
+xlabel('Eixo X');
+ylabel('Eixo Z');
+zlabel('Valores Interpolados');
+title('11/07/1990');
+
+% Adicionar uma barra de cor para indicar os valores da superfície
+colorbar;
+
+% Ajustar a visualização da perspectiva
+view(45, 30);
+
+% Adicionar uma grade para facilitar a visualização
+grid on;
