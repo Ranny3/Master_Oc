@@ -86,7 +86,6 @@ data = ncread(filename);
 
 % View the variable names and dimensions in the file
 disp(data);
-
 ---------------------------- OR -------------------------------------
 % Open the NetCDF file and retrieve the variable information
 info = ncinfo(filename2);
@@ -96,6 +95,29 @@ data2 = ncread(filename2, info.Variables(1).Name);
 
 % View the variable data
 disp(data);
+-----------------------------------------------------------------------------------------
+% Dados de entrada: coordenadas x e z dos transectos
+x1 = [0, 10, 20, 30, 40]; % coordenadas x do primeiro transecto
+z1 = [5, 4, 3, 2, 1];     % profundidades correspondentes do primeiro transecto
+x2 = [0, 10, 20, 30, 40]; % coordenadas x do segundo transecto
+z2 = [6, 5, 4, 3, 2];     % profundidades correspondentes do segundo transecto
+
+% Plotar os transectos
+figure;
+plot(x1, z1, 'b.-', 'LineWidth', 2);
+hold on;
+plot(x2, z2, 'r.-', 'LineWidth', 2);
+xlabel('Distância (m)');
+ylabel('Profundidade (m)');
+title('Transectos Batimétricos');
+legend('Transecto 1', 'Transecto 2');
+grid on;
+
+% Calcular a área entre os transectos
+area_entre_transectos = trapz(x1, z1) - trapz(x2, z2);
+
+disp(['A área entre os transectos é: ', num2str(area_entre_transectos), ' metros cúbicos.']);
+----------------------------
 ------------------------------------------------------------------------------------------
 % Plotar mais de 2 perfis ao mesmo tempo
 % Plot só funciona com array e não table
