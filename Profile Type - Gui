@@ -1,0 +1,52 @@
+@author: Guilherme Vieira da Silva (g.vieiradasilva@griffith.edu.au)
+"""
+
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+from numpy import genfromtxt
+from tslearn.clustering import TimeSeriesKMeans
+
+# middle --> all profiles interpolated to the same distances - from 0 to 800 m cross-shore. Each line represents one measurement and columns are distances
+middle = genfromtxt("R:\CDM/Guilherme/Research/2023_24FY/03_Codes/ProfileAnalysis/outputs/middle_ProfilesReconstructedwithEOF.csv", delimiter=',')
+
+som_y = math.ceil(math.sqrt(math.sqrt(len(middle))))
+# Define the numnber of clusters
+cluster_count = 9 #math.ceil(math.sqrt(len(middle))) 
+# A good rule of thumb is choosing k as the square root of the number of points in the training data set in kNN
+# 99 is close to the initial profile type plot
+
+# Apply time series K-means to the dataset
+km = TimeSeriesKMeans(n_clusters=cluster_count,random_state=1)
+
+labels = km.fit_predict(middle)
+
+plot_count = math.ceil(math.sqrt(cluster_count))
+
+fig, axs = plt.subplots(plot_count,plot_count,figsize=(10,12))
+row_i=0
+column_j=0
+clustnumb=1;
+# For each label there is, plots every series with that label
+for label in set(labels):
+    cluster = []
+
+    for i in range(len(labels)):
+            if(labels[i]==label):
+                axs[row_i, column_j].plot(middle[i],c="gray",alpha=0.4)
+                cluster.append(middle[i])
+                
+    if len(cluster) > 0:
+        axs[row_i, column_j].plot(np.average(np.vstack(cluster),axis=0),c="red")
+    axs[row_i, column_j].set_xlabel('Distance (m)')
+    axs[row_i, column_j].set_ylabel('Height (m)')
+    axs[row_i, column_j].grid()
+    column_j+=1
+    clustnumb+=1
+    if column_j%plot_count == 0:
+        row_i+=1
+        column_j=0
+
+plt.tight_layout()        
+plt.show()
+plt.savefig('ProfileClusters.png')
