@@ -264,16 +264,17 @@ plt.plot(distance_equations, bat_equations)
 plt.plot(distance,bathymetry)
 plt.title(**)
 
-                                                            -------------------------------------------------------
-f = interpolate.interp1d(distance, bathymetry,'cubic')
-bat_obs_interp = f(distance_equations)   # use interpolation function returned by `interp1d`
+                                                            ----
+
+f = interpolate.interp1d(distance, bathymetry,'cubic') # Utiliza a função `interp1d` para interpolar os dados da batimetria em relação à distância (`distance`) usando uma interpolação cúbica. 
+bat_obs_interp = f(distance_equations)   # interpolar os dados da batimetria observada  nos pontos de distância calculados anteriormente (`distance_equations)
 
 transect_std =[]
-transect_std = (np.std([bat_obs_interp,bat_equations]))
-MSE = mean_squared_error(bat_obs_interp, bat_equations)
-RMSE = math.sqrt(MSE)
+transect_std = (np.std([bat_obs_interp,bat_equations])) # Desvio Padrão
+MSE = mean_squared_error(bat_obs_interp, bat_equations) #  Calcula o erro médio quadrático
+RMSE = math.sqrt(MSE) # Calcula a raiz quadrada do erro médio quadrático
 
-result = stats.linregress(bat_obs_interp, bat_equations)
+result = stats.linregress(bat_obs_interp, bat_equations) #  Realiza uma regressão linear entre as batimetrias interpoladas e as batimetrias calculadas  
 fig, ax = plt.subplots(figsize = (14, 7))
 
 plt.plot(distance_equations,bat_equations, label = 'Batimetria calculada')
