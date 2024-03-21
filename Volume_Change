@@ -1,0 +1,88 @@
+Cálculo da área dos transectos
+% Gerar os transectos
+figure;
+plot(x1, z1, 'b.-', 'LineWidth', 2);
+hold on;
+plot(x2, z2, 'r.-', 'LineWidth', 2);
+xlabel('Distância (m)');
+ylabel('Profundidade (m)');
+title('Transectos **');
+legend('Data **', 'Data **');
+grid on;
+
+% Calcular a área entre os transectos
+area = trapz(x1, z1) - trapz(x2, z2);
+disp(['A área entre os transectos é: ', num2str(area), ' metros quadrados.']);
+
+% Calcular a largura da faixa entre os transectos
+largura_faixa = x2(2) - x1(1);
+
+% Calcular o volume da área multiplicando a área pela largura da faixa
+volume = area * largura_faixa;
+disp(['O volume da área entre os transectos é: ', num2str(volume), ' metros cúbicos.']);
+
+Impressão de Gráfico de Mudança de Volume
+%Plotar os três gráficos juntos
+% Definir as variáveis distance, volume_change e depth 
+distance = x*;
+volume_change = z* - z*;
+depth = 1:numel(z*);
+
+% Plot 1° subplot
+subplot(1, 3, 1);
+hold on;
+
+% Linha central zero
+plot([0, 0], [min(depth), max(depth)], 'k--');
+
+% Mudança de volume representada em barras
+barh(depth, volume_change, 'b');
+
+% Set limites e legendas
+xlabel('Mudança de Volume (m³)');
+ylabel('Profundidade (m)');
+xlim([min(volume_change) - 1, max(volume_change) + 1]);
+ylim([min(depth), max(depth)]);
+% Adicionar a função Invert y-axis caso o eixo y estiver ao contrário do desejado
+set(gca, 'YDir', 'reverse');
+% Show grid
+grid on;
+% Hold off para os subplots seguintes
+hold off;
+sgtitle('Transecto ***', 'FontSize', 16);
+subplot(1, 3, 2);
+hold on;
+
+% Plot a área abaixo da linha de volume preenchidas
+fill([distance; flip(distance)], [zeros(size(volume_change)); flip(volume_change)], 'b', 'EdgeColor', 'none', 'FaceAlpha', 0.3);
+
+% Plot a linha de mudança volume
+plot(distance, volume_change, 'b.-', 'LineWidth', 1.5);
+
+% Plot a linha central zero 
+plot([min(distance), max(distance)], [0, 0], 'k--', 'LineWidth', 1.5);
+hold off;
+
+% Set títulos
+xlabel('Distância (m)');
+ylabel('Mudança de Volume (m³)');
+
+% Ajuste do limite do eixo y
+ylim([min(volume_change) - 1, max(volume_change) + 1]);
+subplot(1, 3, 3);
+hold on;
+% Plota a 1° set of data
+plot(x1, z1, '-o', 'LineWidth', 2);
+hold on;
+
+% Plota a 2° set of data
+plot(x2, z2, '-x', 'LineWidth', 2);
+
+% Adicione legenda
+legend('***', '***');
+
+% Ajuste da posição dos títulos (opicional)
+titlePos = get(gca, 'Title');
+titlePos.Position(2) = titlePos.Position(2) + 0.05;
+set(gca, 'Title', titlePos);
+
