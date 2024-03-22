@@ -63,20 +63,6 @@ titlePos = get(gca, 'Title');
 titlePos.Position(2) = titlePos.Position(2) + 0.05;
 set(gca, 'Title', titlePos);
 
-
-#Mudar de acordo com os dados#
-----------------------------------------------------------------------------------------------###
-% Assuming you have UTM coordinates in variables easting and northing
-easting = 500000;  % Replace with your UTM easting value
-northing = 4500000;  % Replace with your UTM northing value
-zone = 31;  % Replace with your UTM zone number
-
-% Convert UTM coordinates to latitude and longitude
-[latitude, longitude] = utm2ll(easting, northing, zone);
-
-% Display the latitude and longitude
-disp(['Latitude: ', num2str(latitude)]);
-disp(['Longitude: ', num2str(longitude)]);
 -------------------------------------------------------------------------------------------
 % Specify the path to the NetCDF file
 filename2 = 'B:\Cassie-core_Larissa_2023\03_temp\Transects_survey_19740506.nc';
@@ -113,11 +99,12 @@ title('Transectos Batimétricos');
 legend('Transecto 1', 'Transecto 2');
 grid on;
 
+-------------------------------------------------------------------------
 % Calcular a área entre os transectos
 area_entre_transectos = trapz(x1, z1) - trapz(x2, z2);
 
 disp(['A área entre os transectos é: ', num2str(area_entre_transectos), ' metros cúbicos.']);
-----------------------------
+
 ------------------------------------------------------------------------------------------
 % Plotar mais de 2 perfis ao mesmo tempo
 % Plot só funciona com array e não table
@@ -328,37 +315,6 @@ titlePos = get(gca, 'Title');
 titlePos.Position(2) = titlePos.Position(2) + 0.05;
 set(gca, 'Title', titlePos);
 
----------------------------------------------------------------------------#####
-x = rand(500, 1) * 1000;
-z = rand(500, 1) * 20 - 10;
-
-figure;
-hold on;
-for i = 1:500
-    plot(x(i, :), z(i, :));
-end
-hold off;
-
-title('Beach Profiles');
-xlabel('X');
-ylabel('Z');
-grid on;
-axis([0 1000 -10 10]);
-x = rand(500, 1) * 1000;
-z = rand(500, 1) * 20 - 10;
-
-figure;
-hold on;
-for i = 1:500
-    plot(x(i, :), z(i, :));
-end
-hold off;
-
-title('Beach Profiles');
-xlabel('X');
-ylabel('Z');
-grid on;
-axis([0 1000 -10 10]);
 -----------------------------------------------------------------------
 % Prisma Praial
 
@@ -381,12 +337,12 @@ ylabel('Profundidade (m)');
 grid on;
 % Adjust the axes limits according to your data
 axis([min max min max]);
-----------------------------------------------------------------------------------####
-%FRF Coordenadas para metros
-p1 e p2 são as distâncias que eu tenho
+                                            --
+% Prisma Praial pelo código do Cohn
+
 
 ---------------------------------------------------------------------------------------
-% Retirar os datasets vazios
+% Retirar os datasets vazios % Not really a good ideia
 
 % Initialize a new structure
 newLine43.xyzdata = struct();
@@ -430,7 +386,7 @@ for i = 1:numel(extractedColumns)
 end
 
 -----------------------------------------
-% Extrair o z
+% Extrair o z se o formato de inserção for uma célula 
 
 fieldNames = fieldnames(newLine42.xyzdata);
 
@@ -454,7 +410,7 @@ end
 
 
 -----------------------------------------------------------------------------------
-% Interpolação de dados
+ ######Interpolação de dados
 
 % z_data is a cell array containing the z depth data for each profile
 % x_data is a cell array containing the x distance data for each profile
@@ -496,62 +452,11 @@ end
 
 ----------------------------------
 % Médio 
-----------------------
 
-mmap global Coastal Line
 
-gshhs not found. Showing help for m_gshhs instead. ---
 
-  m_gshhs Add a coastline to a given map using 
-            the Global Self-consistant Hierarchical High-resolution 
-            Shorelines, Rivers, and Borders
- 
-          m_gshhs(RES, (standard line option,...,...) ) draws the coastline
-          river network, or borders as  simple lines.
- 
-          m_gshhs(RES,'patch' ( ,standard patch options,...,...) ) draws the 
-          coastline as a number of patches (rivers and borders are not
-          arranged so patches can be drawn).
- 
-          m_gshhs(RES,'save',FILENAME) saves the extracted coastline data
-          for the current projection in a file FILENAME. This allows 
-          speedier replotting using M_USERCOAST(FILENAME). 
-     
-          RES: A one-char string (optionally 2 or 3)
-          
-          First char: resolution - one of
-                       'c'  crude
-                       'l'  low
-                       'i'  intermediate
-                       'h'  high
-                       'f'  full
- 
-          Second char: type - one of
-                       'c' GSHHS coastline (default)
-                       'b' WDB Border
-                       'r' WDB River
-   
-          Third char - if 2nd char is 'b':
-                       '1' Country borders
-                       '2' State/Province and Country borders
-                     - if 2nd char is 'r': '1','2','3','4' 
-                       add successively more tributaries
- 
-          (also maintained is this optional format:
- 
-          RES - selections resolution
-                   1  or 'crude'	
-                   2  or 'low'  	
-                   3  or 'intermediate'  
-                   4  or 'high' 	
-                   5  or 'full  	
- 
-          but please don't use this).
- 
-          See also m_proj, m_grid, m_coast, m_gshhs_l, m_gshhs_h, m_gshhs_c 
-          m_usercoast
 --------------------------------------------------------------------------------------------
-Surperfície
+ #########Surperfície
 % Dados de exemplo (substitua esses valores pelos seus dados reais)
 x = linspace(1, 35, 10); % Exemplo: coordenadas x
 z = linspace(1, 35, 10); % Exemplo: coordenadas z
