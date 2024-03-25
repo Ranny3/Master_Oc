@@ -339,51 +339,53 @@ grid on;
 axis([min max min max]);
                                             --
 % Prisma Praial pelo código do Cohn
+% URL do conjunto de dados de morfologia
 url = 'https://chldata.erdc.dren.mil/thredds/dodsC/frf/geomorphology/elevationTransects/survey/surveyTransects.ncml';
 
-%Download all the morphology data (this could take a few minutes)
-x = ncread(url, 'xFRF');
-y = ncread(url, 'yFRF');
-z = ncread(url, 'elevation');
-profNum = ncread(url, 'profileNumber');
-surveyNum = ncread(url, 'surveyNumber');
-date = ncread(url, 'date');
+% Baixando todos os dados de morfologia (isso pode levar alguns minutos)
+x = ncread(url, 'xFRF'); % Coordenadas X
+y = ncread(url, 'yFRF'); % Coordenadas Y
+z = ncread(url, 'elevation'); % Elevação
+profNum = ncread(url, 'profileNumber'); % Número do perfil
+surveyNum = ncread(url, 'surveyNumber'); % Número da pesquisa
+date = ncread(url, 'date'); % Data
 
-%Subset the data per date
-unique_dates = unique(surveyNum);
+% Subconjunto dos dados por data
+unique_dates = unique(surveyNum); % Encontrar datas únicas
 for idx = 1:numel(unique_dates)
-    ifind = find(surveyNum == unique_dates(idx));
-    xyz = [x(ifind) y(ifind) z(ifind)];
-    eval(['morph.data.xyz', num2str(idx), ' = xyz;']);
-    morph.dates(idx) = round(nanmean(date(ifind))/86400 + datenum(1970,1,1));        
+    ifind = find(surveyNum == unique_dates(idx)); % Encontrar índices correspondentes à data
+    xyz = [x(ifind) y(ifind) z(ifind)]; % Coordenadas XYZ correspondentes à data
+    eval(['morph.data.xyz', num2str(idx), ' = xyz;']); % Armazenar as coordenadas XYZ em uma estrutura
+    morph.dates(idx) = round(nanmean(date(ifind))/86400 + datenum(1970,1,1)); % Calcular a média das datas em segundos e convertê-las para números de série do MATLAB        
 end
 
-%Subset the data per transect and date
+% Subconjunto dos dados por transecto e data
 y_lines = [-91 -46 1 46 91 137 183 229 274 320 366 411 457 509 517 524 558 594 640 686 731 777 823 869 914 951 960 1006 1337 1277 1217 1157 1052 1097 927];
-dist_thresh = 5;
+dist_thresh = 5; % Limiar de distância
 for idate = 1:numel(morph.dates)
-    eval(['inp = morph.data.xyz', num2str(idate),';']);
+    eval(['inp = morph.data.xyz', num2str(idate),';']); % Coordenadas XYZ correspondentes à data
     for iline = 1:numel(y_lines)
-        iuse = find(inp(:,2)>[y_lines(iline)-dist_thresh] & inp(:,2)<[y_lines(iline)+dist_thresh]);
-        eval(['line', num2str(iline), '.xyzdata.data', num2str(idate), '= inp(iuse, 1:3);']);
-        eval(['line', num2str(iline), '.xyzdata.data', num2str(idate), '(:,2) = y_lines(iline);']);
-        eval(['line', num2str(iline), '.xyzdates = morph.dates;']);
+        iuse = find(inp(:,2)>[y_lines(iline)-dist_thresh] & inp(:,2)<[y_lines(iline)+dist_thresh]); % Índices correspondentes ao transecto
+        eval(['line', num2str(iline), '.xyzdata.data', num2str(idate), '= inp(iuse, 1:3);']); % Armazenar os dados do transecto em uma estrutura
+        eval(['line', num2str(iline), '.xyzdata.data', num2str(idate), '(:,2) = y_lines(iline);']); % Atribuir a coordenada Y do transecto aos dados
+        eval(['line', num2str(iline), '.xyzdates = morph.dates;']); % Armazenar as datas
     end
 end
 
-%Example plot to confirm working
-cmap = jet(numel(morph.dates));
-lineNum = 10;
+% Exemplo de gráfico para confirmar o funcionamento
+cmap = jet(numel(morph.dates)); % Mapa de cores
+lineNum = 10; % Número do transecto
 figure,
 hold on
 for itime = 1:numel(morph.dates)
-    tempdata = eval(['line', num2str(lineNum),'.xyzdata.data', num2str(itime)]);
-    plot(tempdata(:,1), tempdata(:,3), '.', 'Color', cmap(itime,:))
+    tempdata = eval(['line', num2str(lineNum),'.xyzdata.data', num2str(itime)]); % Dados do transecto em um tempo específico
+    plot(tempdata(:,1), tempdata(:,3), '.', 'Color', cmap(itime,:)) % Plotar os dados
 end
-xlabel('Distância (m)')
-ylabel('Elevation (m, NAVD88)')
+xlabel('Distância (m)') % Rótulo do eixo X
+ylabel('Elevação (m, NAVD88)') % Rótulo do eixo Y
 grid on
-
+xlim([0 1000]) % Limites do eixo X
+ylim([-10 10]) % Limites do eixo Y
 ---------------------------------------------------------------------------------------
 % Retirar os datasets vazios % Not really a good ideia
 
