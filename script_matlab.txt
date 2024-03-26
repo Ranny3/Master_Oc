@@ -88,7 +88,7 @@ z1 = [5, 4, 3, 2, 1];     % profundidades correspondentes do primeiro transecto
 x2 = [0, 10, 20, 30, 40]; % coordenadas x do segundo transecto
 z2 = [6, 5, 4, 3, 2];     % profundidades correspondentes do segundo transecto
 
-% Plotar os transectos
+% Gerar os transectos
 figure;
 plot(x1, z1, 'b.-', 'LineWidth', 2);
 hold on;
@@ -106,7 +106,7 @@ area_entre_transectos = trapz(x1, z1) - trapz(x2, z2);
 disp(['A área entre os transectos é: ', num2str(area_entre_transectos), ' metros cúbicos.']);
 
 ------------------------------------------------------------------------------------------
-% Plotar mais de 2 perfis ao mesmo tempo
+% Gerar mais de 2 perfis ao mesmo tempo
 % Plot só funciona com array e não table
 % Convert table variables to arrays
 x1 = table2array(x1);
@@ -134,7 +134,7 @@ ylabel('z');
 legend('Profile 1', 'Profile 2', 'Profile 3', 'Profile 4', 'Profile 5');
 
 % Add a title
-title('ETA79');
+title('ETA*');
 ----------------------------------------------------------------------------------------------------
 % Mudança do volume colocada como espectro de onda no eixo y, volume horizontal
 volume_change = z2 - z1;
@@ -337,7 +337,7 @@ ylabel('Profundidade (m)');
 grid on;
 % Adjust the axes limits according to your data
 axis([min max min max]);
-                                            --
+                                            -----------------
 % Prisma Praial pelo código do Cohn
 % URL do conjunto de dados de morfologia
 url = 'https://chldata.erdc.dren.mil/thredds/dodsC/frf/geomorphology/elevationTransects/survey/surveyTransects.ncml';
@@ -387,24 +387,22 @@ grid on
 xlim([0 1000]) % Limites do eixo X
 ylim([-10 10]) % Limites do eixo Y
 ---------------------------------------------------------------------------------------
-% Retirar os datasets vazios % Not really a good ideia
+% Retirar os datasets vazios %% Cria uma nova estrutura para armazenar os dados não vazios
 
-% Initialize a new structure
-newLine43.xyzdata = struct();
+newline13.xyzdata = struct();
 
-% Get the fieldnames 
-fieldNames = fieldnames(line43.xyzdata);
-
-% Iterate through the fieldnames
-for i = 1:numel(fieldNames)
-    fieldName = fieldNames{i};
-    dataset = line43.xyzdata.(fieldName);
+% Itera através dos números de data de 1 a 1166
+for i = 1:1166
+    % Gera o nome do campo (data1, data2, ..., data1166)
+    fieldName = ['data', num2str(i)];
     
-    % Check if the dataset is empty and add it to the new structure if it's not empty
-    if ~isempty(dataset)
-        newLine43.xyzdata.(fieldName) = dataset;
+    % Verifica se o campo existe na estrutura e se não está vazio
+    if isfield(line13.xyzdata, fieldName) && ~isempty(line13.xyzdata.(fieldName))
+        % Se o campo existe e não está vazio, copia-o para a nova estrutura
+        newline13.xyzdata.(fieldName) = line13.xyzdata.(fieldName);
     end
 end
+
 
 -----------------------------------------------------------------------------------
 % Extrair o x
@@ -455,41 +453,42 @@ end
 
 
 -----------------------------------------------------------------------------------
- ######Interpolação de dados
+Interpolação de dados
 
-% z_data is a cell array containing the z depth data for each profile
-% x_data is a cell array containing the x distance data for each profile
+% Load the data from line11.xyzdata.data151
+l13 = line13.xyzdata.data152;
 
-% Find the maximum number of points among all profiles
-max_points = 0;
-for i = 1:numel(zData)
-    num_points = numel(zData{i});
-    if num_points > max_points
-        max_points = num_points;
-    end
-end
+% Sort the data based on the first column
+sorted_data = sortrows(l13, 1);
 
-% Interpolate the profiles to have the same number of points
-interpolated_profiles = cell(numel(zData), 1);
-for i = 1:numel(zData)
-    x = xData{i};
-    z = zData{i};
-    
-    % Sort and remove duplicate x values
-    [unique_x, unique_indices] = unique(x);
-    sorted_indices = sort(unique_indices);
-    unique_z = z(unique_indices);
-    
-    % Create a new set of x values with the desired number of points
-    new_x = linspace(min(unique_x), max(unique_x), max_points)';
-    
-    % Interpolate the z values using the new set of x values
-    new_z = interp1(unique_x(sorted_indices), unique_z(sorted_indices), new_x, 'linear');
-    
-    % Store the interpolated profile
-    interpolated_profiles{i} = [new_x, new_z];
-end
+% Interpolate the first column to have 1000 points
+x152 = linspace(min(sorted_data(:,1)), max(sorted_data(:,1)), 1000);
+interpolated_col1 = interp1(sorted_data(:,1), sorted_data(:,1), x152);
 
+% Interpolate the third column to have 1000 points
+z152 = linspace(min(sorted_data(:,1)), max(sorted_data(:,3)), 1000);
+interpolated_col3 = interp1(sorted_data(:,1), sorted_data(:,3), x152);
+
+% Plot the original and interpolated data
+figure;
+subplot(2,1,1);
+plot(sorted_data(:,1), sorted_data(:,3), 'bo', 'DisplayName', 'Original Data');
+hold on;
+plot(x152, interpolated_col3, 'r-', 'DisplayName', 'Interpolated Data');
+xlabel('Column 1');
+ylabel('Column 3');
+title('Interpolation of Column 3');
+legend;
+
+
+subplot(2,1,2);
+plot(sorted_data(:,1), sorted_data(:,1), 'bo', 'DisplayName', 'Original Data');
+hold on;
+plot(x152, interpolated_col1, 'r-', 'DisplayName', 'Interpolated Data');
+xlabel('Column 1');
+ylabel('Column 1');
+title('Interpolation of Column 1');
+legend;
 ------------------------------------------------------------------------------
 % Maximum e minímo
 
