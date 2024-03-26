@@ -7,3 +7,4 @@ para depois poder fazer o cálculo do volume ou aprender a puxar sem tirar das c
 %%%No plot dos 3 gráficos o Vertical vem com a profundidade errada, lembrar de trocar o n° dos perfis no 3° plot e trocar o nome e data dos transectos,verificar o depth - 
 %%% Tabela com os valores dos volumes por perfil mudado
 
+%%% Para usar o clustering do gui os dados deven estar interpolados
