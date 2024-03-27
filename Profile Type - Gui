@@ -50,3 +50,45 @@ for label in set(labels):
 plt.tight_layout()        
 plt.show()
 plt.savefig('ProfileClusters.png')
+------------------------------------------------------------------------------------------------------
+VERSÃO MATLAB
+% Definir o número de clusters
+cluster_count = 9;
+
+% Aplicar o K-means em séries temporais ao conjunto de dados
+rng(1); % Define a semente aleatória para reproduzibilidade
+labels = kmeans(middle, cluster_count);
+
+% Calcular o número de linhas e colunas para o subplot
+plot_count = ceil(sqrt(cluster_count));
+
+% Criar a figura e os eixos
+figure('Position', [100, 100, 1200, 900]);
+for label = 1:cluster_count
+    cluster_indices = find(labels == label);
+    cluster = middle(cluster_indices, :);
+    
+    % Plotar os perfis do cluster
+    subplot(plot_count, plot_count, label);
+    hold on;
+    for i = 1:size(cluster, 1)
+        plot(cluster(i, :), 'Color', [0.5, 0.5, 0.5], 'LineWidth', 0.5);
+    end
+    
+    % Plotar a média do cluster em vermelho
+    plot(mean(cluster), 'Color', 'red', 'LineWidth', 2);
+    
+    % Configurar os rótulos e a grade
+    xlabel('Distância (m)');
+    ylabel('Altura (m)');
+    grid on;
+    title(['Cluster ', num2str(label)]);
+end
+
+% Ajustar o layout e salvar o gráfico
+set(gcf, 'PaperPositionMode', 'auto');
+print('ProfileClusters','-dpng','-r300');
+
+
+
+
