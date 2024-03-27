@@ -453,7 +453,7 @@ end
 
 
 -----------------------------------------------------------------------------------
-Interpolação de dados
+% Interpolação de cada dado invidualmente
 
 % Load the data from line11.xyzdata.data151
 l13 = line13.xyzdata.data152;
@@ -489,6 +489,11 @@ xlabel('Column 1');
 ylabel('Column 1');
 title('Interpolation of Column 1');
 legend;
+                                                     -----
+
+
+
+
 ------------------------------------------------------------------------------
 % Maximum e minímo
 
