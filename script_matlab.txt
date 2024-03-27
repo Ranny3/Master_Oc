@@ -538,3 +538,7 @@ view(45, 30);
 
 % Adicionar uma grade para facilitar a visualização
 grid on;
+------------------------------------------------------------------------------------
+Concatenar pra matriz 
+% Concatenar as matrizes verticalmente
+data_matrix = vertcat(z152, z176, z225, z256, z265, z269, z280, z284, z288, z294, z299, z302, z304, z307, z311, z314, z317, z323, z328, z332, z336, z351, z362, z374, z377, z380, z405, z410, z413, z416, z419, z421, z423, z426, z428, z433, z437, z441, z443, z446, z448, z454, z455, z456, z458, z461, z462, z463, z465, z468, z469, z472, z473, z475, z479, z482, z486, z487, z489, z491, z494, z499, z520, z527, z528, z530, z532, z534, z537, z539, z541, z542, z543, z545, z548, z549,z552);
