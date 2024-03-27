@@ -64,6 +64,8 @@ titlePos.Position(2) = titlePos.Position(2) + 0.05;
 set(gca, 'Title', titlePos);
 
 -------------------------------------------------------------------------------------------
+%Se o dado estiver no formato .nc ao invés de csv
+
 % Specify the path to the NetCDF file
 filename2 = 'B:\Cassie-core_Larissa_2023\03_temp\Transects_survey_19740506.nc';
 
@@ -72,7 +74,7 @@ data = ncread(filename);
 
 % View the variable names and dimensions in the file
 disp(data);
----------------------------- OR -------------------------------------
+                                            -------- OR -------
 % Open the NetCDF file and retrieve the variable information
 info = ncinfo(filename2);
 
@@ -82,6 +84,8 @@ data2 = ncread(filename2, info.Variables(1).Name);
 % View the variable data
 disp(data);
 -----------------------------------------------------------------------------------------
+% Gerar os gráficos
+
 % Dados de entrada: coordenadas x e z dos transectos
 x1 = [0, 10, 20, 30, 40]; % coordenadas x do primeiro transecto
 z1 = [5, 4, 3, 2, 1];     % profundidades correspondentes do primeiro transecto
@@ -121,12 +125,13 @@ x5 = table2array(x5);
 z5 = table2array(z5);
 
 % Plot the profiles
-plot(x1, z1, '-o', 'LineWidth', 2);  % First profile
+figure;
+plot(x152, z152, '-o', 'LineWidth', 2);  % First profile
 hold on;
-plot(x2, z2, '-x', 'LineWidth', 2);  % Second profile
-plot(x3, z3, '-s', 'LineWidth', 2);  % Third profile
-plot(x4, z4, '-^', 'LineWidth', 2);  % Fourth profile
-plot(x5, z5, '-d', 'LineWidth', 2);  % Fifth profile
+plot(x523, z523, '-x', 'LineWidth', 2);  % Second profile
+plot(x473, z473, '-s', 'LineWidth', 2);  % Third profile
+plot(x491, z491, '-^', 'LineWidth', 2);  % Fourth profile
+plot(x532, z532, '-d', 'LineWidth', 2);  % Fifth profile
 
 % Add axis labels and legend
 xlabel('x');
@@ -240,7 +245,7 @@ grid on;
 % Hold off from further plotting
 hold off;
 --------------------------------------------------------------------------------------------
-%Plotar os três gráficos juntos
+%Gerar os três gráficos juntos
 
 % Definir as variáveis distance, volume_change e depth 
 distance = x*;
@@ -337,7 +342,7 @@ ylabel('Profundidade (m)');
 grid on;
 % Adjust the axes limits according to your data
 axis([min max min max]);
-                                            -----------------
+                                            -------- OR ---------
 % Prisma Praial pelo código do Cohn
 % URL do conjunto de dados de morfologia
 url = 'https://chldata.erdc.dren.mil/thredds/dodsC/frf/geomorphology/elevationTransects/survey/surveyTransects.ncml';
@@ -387,8 +392,9 @@ grid on
 xlim([0 1000]) % Limites do eixo X
 ylim([-10 10]) % Limites do eixo Y
 ---------------------------------------------------------------------------------------
-% Retirar os datasets vazios %% Cria uma nova estrutura para armazenar os dados não vazios
+%% Criar uma nova estrutura para armazenar os dados não vazios
 
+% Retirar os datasets vazios 
 newline13.xyzdata = struct();
 
 % Itera através dos números de data de 1 a 1166
@@ -402,7 +408,6 @@ for i = 1:1166
         newline13.xyzdata.(fieldName) = line13.xyzdata.(fieldName);
     end
 end
-
 
 -----------------------------------------------------------------------------------
 % Extrair o x
@@ -474,7 +479,7 @@ figure;
 subplot(2,1,1);
 plot(sorted_data(:,1), sorted_data(:,3), 'bo', 'DisplayName', 'Original Data');
 hold on;
-plot(x152, interpolated_col3, 'r-', 'DisplayName', 'Interpolated Data');
+plot(x552, interpolated_col3, 'r-', 'DisplayName', 'Interpolated Data');
 ylabel('Profundidade');
 title('Interpolação da Profundidade');
 legend;
@@ -483,12 +488,12 @@ legend;
 subplot(2,1,2);
 plot(sorted_data(:,1), sorted_data(:,1), 'bo', 'DisplayName', 'Original Data');
 hold on;
-plot(x152, interpolated_col1, 'r-', 'DisplayName', 'Interpolated Data');
+plot(x552, interpolated_col1, 'r-', 'DisplayName', 'Interpolated Data');
 xlabel('Distância');
 ylabel('Distância');
 title('Interpolação da Distância');
 legend;
-                                                     -----
+                                                     --------------- OR -------------
 
 
 
@@ -539,9 +544,11 @@ view(45, 30);
 grid on;
 ------------------------------------------------------------------------------------
 Concatenar pra matriz 
+
 % Concatenar as matrizes verticalmente
 data_matrix = vertcat(z152, z176, z225, z256, z265, z269, z280, z284, z288, z294, z299, z302, z304, z307, z311, z314, z317, z323, z328, z332, z336, z351, z362, z374, z377, z380, z405, z410, z413, z416, z419, z421, z423, z426, z428, z433, z437, z441, z443, z446, z448, z454, z455, z456, z458, z461, z462, z463, z465, z468, z469, z472, z473, z475, z479, z482, z486, z487, z489, z491, z494, z499, z520, z527, z528, z530, z532, z534, z537, z539, z541, z542, z543, z545, z548, z549,z552);
 
 % Transpor a matriz
 data_matrix_transposed = data_matrix';
+
 
