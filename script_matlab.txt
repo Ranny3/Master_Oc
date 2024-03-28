@@ -551,4 +551,5 @@ data_matrix = vertcat(z152, z176, z225, z256, z265, z269, z280, z284, z288, z294
 % Transpor a matriz
 data_matrix_transposed = data_matrix';
 
-
+% Exportar dados 
+csvwrite('***.csv',filename);
